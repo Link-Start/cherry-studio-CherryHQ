@@ -153,7 +153,8 @@ const languageMap = {
   'fr-fr': 'French',
   'pt-pt': 'Portuguese',
   'de-de': 'German',
-  'ro-ro': 'Romanian'
+  'ro-ro': 'Romanian',
+  'vi-vn': 'Vietnamese'
 }
 
 const PROMPT = `
@@ -259,11 +260,11 @@ const countTranslatableStrings = (obj: I18N): number =>
 const main = async () => {
   validateConfig()
 
-  const localesDir = path.join(__dirname, '../src/renderer/src/i18n/locales')
-  const translateDir = path.join(__dirname, '../src/renderer/src/i18n/translate')
+  const localesDir = path.join(__dirname, '../src/renderer/i18n/locales')
+  const translateDir = path.join(__dirname, '../src/renderer/i18n/translate')
   const baseLocale = process.env.TRANSLATION_BASE_LOCALE ?? 'en-us'
   const baseFileName = `${baseLocale}.json`
-  const baseLocalePath = path.join(__dirname, '../src/renderer/src/i18n/locales', baseFileName)
+  const baseLocalePath = path.join(__dirname, '../src/renderer/i18n/locales', baseFileName)
   if (!fs.existsSync(baseLocalePath)) {
     throw new Error(`${baseLocalePath} not found.`)
   }

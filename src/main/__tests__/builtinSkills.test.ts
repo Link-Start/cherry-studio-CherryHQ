@@ -28,42 +28,24 @@ vi.mock('electron', () => ({
 }))
 
 vi.mock('../utils', () => ({
-  getDataPath: vi.fn((subPath?: string) => (subPath ? path.join('/userData/Data', subPath) : '/userData/Data'))
+  toAsarUnpackedPath: vi.fn((filePath: string) => filePath)
 }))
 
-const mockRepo = {
-  getByFolderName: vi.fn(),
-  delete: vi.fn(),
-  insert: vi.fn()
-}
-
-vi.mock('../services/agents/skills/SkillRepository', () => ({
-  SkillRepository: {
-    getInstance: () => mockRepo
-  }
+const { mockSyncBuiltinSkill } = vi.hoisted(() => ({
+  mockSyncBuiltinSkill: vi.fn()
 }))
 
-vi.mock('../utils/markdownParser', () => ({
-  parseSkillMetadata: vi.fn(() =>
-    Promise.resolve({
-      name: 'Test Skill',
-      description: 'A test skill',
-      filename: 'test-skill',
-      author: 'test',
-      tags: []
-    })
-  ),
-  findSkillMdPath: vi.fn(),
-  findAllSkillDirectories: vi.fn()
+vi.mock('@main/ai/skills/SkillService', () => ({
+  skillService: { syncBuiltinSkill: mockSyncBuiltinSkill }
 }))
 
-const resourceSkillsPath = '/app/resources/skills'
-const globalSkillsPath = '/userData/Data/Skills'
+// Matches the stub in tests/main.setup.ts → mockApplicationFactory().getPath
+const resourceSkillsPath = '/mock/feature.agents.skills.builtin'
+const globalSkillsPath = '/mock/feature.agents.skills'
 
 beforeEach(() => {
   vi.clearAllMocks()
-  mockRepo.getByFolderName.mockResolvedValue(null)
-  mockRepo.insert.mockResolvedValue({ id: 'test-id' })
+  mockSyncBuiltinSkill.mockResolvedValue(undefined)
 })
 
 afterEach(() => {
@@ -81,19 +63,12 @@ describe('installBuiltinSkills', () => {
   })
 
   it('should copy skills that do not exist at destination', async () => {
-    vi.mocked(fs.access).mockResolvedValueOnce(undefined) // resourceSkillsPath exists
+    vi.mocked(fs.access).mockResolvedValueOnce(undefined)
     vi.mocked(fs.readdir).mockResolvedValueOnce([{ name: 'my-skill', isDirectory: () => true }] as any)
-    // Destination .version read fails → skill not installed yet
-    vi.mocked(fs.readFile).mockRejectedValueOnce(new Error('ENOENT'))
+    vi.mocked(fs.readFile).mockRejectedValueOnce(new Error('ENOENT')) // .version missing → needs update
     vi.mocked(fs.mkdir).mockResolvedValue(undefined as any)
     vi.mocked(fs.cp).mockResolvedValue(undefined)
     vi.mocked(fs.writeFile).mockResolvedValue(undefined)
-    // ensureSymlink: readlink fails (no existing link)
-    vi.mocked(fs.readlink).mockRejectedValueOnce(new Error('ENOENT'))
-    vi.mocked(fs.rm).mockRejectedValueOnce(new Error('ENOENT'))
-    vi.mocked(fs.symlink).mockResolvedValue(undefined)
-    // computeHash: SKILL.md read
-    vi.mocked(fs.readFile).mockResolvedValueOnce('# My Skill' as any)
 
     await installBuiltinSkills()
 
@@ -104,62 +79,31 @@ describe('installBuiltinSkills', () => {
       { recursive: true }
     )
     expect(fs.writeFile).toHaveBeenCalledWith(path.join(globalSkillsPath, 'my-skill', '.version'), '2.0.0', 'utf-8')
-  })
-
-  it('should register built-in skill in DB', async () => {
-    vi.mocked(fs.access).mockResolvedValueOnce(undefined)
-    vi.mocked(fs.readdir).mockResolvedValueOnce([{ name: 'my-skill', isDirectory: () => true }] as any)
-    vi.mocked(fs.readFile).mockRejectedValueOnce(new Error('ENOENT')) // .version
-    vi.mocked(fs.mkdir).mockResolvedValue(undefined as any)
-    vi.mocked(fs.cp).mockResolvedValue(undefined)
-    vi.mocked(fs.writeFile).mockResolvedValue(undefined)
-    vi.mocked(fs.readlink).mockRejectedValueOnce(new Error('ENOENT'))
-    vi.mocked(fs.rm).mockRejectedValueOnce(new Error('ENOENT'))
-    vi.mocked(fs.symlink).mockResolvedValue(undefined)
-    vi.mocked(fs.readFile).mockResolvedValueOnce('# My Skill' as any) // computeHash
-
-    await installBuiltinSkills()
-
-    expect(mockRepo.getByFolderName).toHaveBeenCalledWith('my-skill')
-    expect(mockRepo.insert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        folder_name: 'my-skill',
-        source: 'builtin',
-        is_enabled: true
-      })
-    )
+    // Per-agent symlinks are handled by SkillService, not here
+    expect(fs.symlink).not.toHaveBeenCalled()
+    // syncBuiltinSkill called with filesUpdated=true
+    expect(mockSyncBuiltinSkill).toHaveBeenCalledWith('my-skill', path.join(globalSkillsPath, 'my-skill'), true)
   })
 
   it('should skip skills that are already up to date', async () => {
-    vi.mocked(fs.access).mockResolvedValueOnce(undefined) // resourceSkillsPath exists
+    vi.mocked(fs.access).mockResolvedValueOnce(undefined)
     vi.mocked(fs.readdir).mockResolvedValueOnce([{ name: 'my-skill', isDirectory: () => true }] as any)
-    // .version file returns current app version
-    vi.mocked(fs.readFile).mockResolvedValueOnce('2.0.0' as any)
-    // ensureSymlink: symlink already points to correct target
-    vi.mocked(fs.mkdir).mockResolvedValue(undefined as any)
-    vi.mocked(fs.readlink).mockResolvedValueOnce(path.join(globalSkillsPath, 'my-skill'))
-    // DB already has the skill
-    mockRepo.getByFolderName.mockResolvedValueOnce({ id: 'existing', isEnabled: true })
+    vi.mocked(fs.readFile).mockResolvedValueOnce('2.0.0' as any) // up to date
 
     await installBuiltinSkills()
 
     expect(fs.cp).not.toHaveBeenCalled()
-    // Should not re-insert since files are up to date and DB row exists
-    expect(mockRepo.insert).not.toHaveBeenCalled()
+    // syncBuiltinSkill still called, but with filesUpdated=false
+    expect(mockSyncBuiltinSkill).toHaveBeenCalledWith('my-skill', path.join(globalSkillsPath, 'my-skill'), false)
   })
 
   it('should update skills when app version is newer', async () => {
     vi.mocked(fs.access).mockResolvedValueOnce(undefined)
     vi.mocked(fs.readdir).mockResolvedValueOnce([{ name: 'my-skill', isDirectory: () => true }] as any)
-    // Installed version is older
-    vi.mocked(fs.readFile).mockResolvedValueOnce('1.0.0' as any)
+    vi.mocked(fs.readFile).mockResolvedValueOnce('1.0.0' as any) // older version
     vi.mocked(fs.mkdir).mockResolvedValue(undefined as any)
     vi.mocked(fs.cp).mockResolvedValue(undefined)
     vi.mocked(fs.writeFile).mockResolvedValue(undefined)
-    vi.mocked(fs.readlink).mockRejectedValueOnce(new Error('ENOENT'))
-    vi.mocked(fs.rm).mockRejectedValueOnce(new Error('ENOENT'))
-    vi.mocked(fs.symlink).mockResolvedValue(undefined)
-    vi.mocked(fs.readFile).mockResolvedValueOnce('# My Skill' as any) // computeHash
 
     await installBuiltinSkills()
 
@@ -169,35 +113,7 @@ describe('installBuiltinSkills', () => {
       { recursive: true }
     )
     expect(fs.writeFile).toHaveBeenCalledWith(path.join(globalSkillsPath, 'my-skill', '.version'), '2.0.0', 'utf-8')
-  })
-
-  it('should preserve enabled state when updating existing built-in skill', async () => {
-    vi.mocked(fs.access).mockResolvedValueOnce(undefined)
-    vi.mocked(fs.readdir).mockResolvedValueOnce([{ name: 'my-skill', isDirectory: () => true }] as any)
-    vi.mocked(fs.readFile).mockResolvedValueOnce('1.0.0' as any) // older version
-    vi.mocked(fs.mkdir).mockResolvedValue(undefined as any)
-    vi.mocked(fs.cp).mockResolvedValue(undefined)
-    vi.mocked(fs.writeFile).mockResolvedValue(undefined)
-    vi.mocked(fs.readlink).mockRejectedValueOnce(new Error('ENOENT'))
-    vi.mocked(fs.rm).mockRejectedValueOnce(new Error('ENOENT'))
-    vi.mocked(fs.symlink).mockResolvedValue(undefined)
-    vi.mocked(fs.readFile).mockResolvedValueOnce('# My Skill' as any) // computeHash
-
-    mockRepo.getByFolderName.mockResolvedValueOnce({
-      id: 'existing-id',
-      isEnabled: false,
-      createdAt: 1000
-    })
-
-    await installBuiltinSkills()
-
-    expect(mockRepo.delete).toHaveBeenCalledWith('existing-id')
-    expect(mockRepo.insert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        is_enabled: false,
-        created_at: 1000
-      })
-    )
+    expect(mockSyncBuiltinSkill).toHaveBeenCalledWith('my-skill', path.join(globalSkillsPath, 'my-skill'), true)
   })
 
   it('should skip entries with path traversal in name', async () => {
@@ -211,6 +127,7 @@ describe('installBuiltinSkills', () => {
 
     expect(fs.mkdir).not.toHaveBeenCalled()
     expect(fs.cp).not.toHaveBeenCalled()
+    expect(mockSyncBuiltinSkill).not.toHaveBeenCalled()
   })
 
   it('should skip non-directory entries', async () => {
@@ -221,27 +138,19 @@ describe('installBuiltinSkills', () => {
 
     expect(fs.mkdir).not.toHaveBeenCalled()
     expect(fs.cp).not.toHaveBeenCalled()
+    expect(mockSyncBuiltinSkill).not.toHaveBeenCalled()
   })
 
-  it('should register DB row even when files are up to date but row is missing', async () => {
+  it('should call syncBuiltinSkill even when files are up to date (DB row may be missing)', async () => {
     vi.mocked(fs.access).mockResolvedValueOnce(undefined)
     vi.mocked(fs.readdir).mockResolvedValueOnce([{ name: 'my-skill', isDirectory: () => true }] as any)
     vi.mocked(fs.readFile).mockResolvedValueOnce('2.0.0' as any) // up to date
-    vi.mocked(fs.mkdir).mockResolvedValue(undefined as any)
-    vi.mocked(fs.readlink).mockResolvedValueOnce(path.join(globalSkillsPath, 'my-skill'))
-    mockRepo.getByFolderName.mockResolvedValueOnce(null) // but missing from DB
-    vi.mocked(fs.readFile).mockResolvedValueOnce('# My Skill' as any) // computeHash
 
     await installBuiltinSkills()
 
-    // Files not copied since up to date
     expect(fs.cp).not.toHaveBeenCalled()
-    // But DB row should be created
-    expect(mockRepo.insert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        folder_name: 'my-skill',
-        source: 'builtin'
-      })
-    )
+    // syncBuiltinSkill is still called with filesUpdated=false so it can
+    // insert the DB row if it was missing (e.g. after a DB reset).
+    expect(mockSyncBuiltinSkill).toHaveBeenCalledWith('my-skill', path.join(globalSkillsPath, 'my-skill'), false)
   })
 })

@@ -1,17 +1,16 @@
 // TODO(v2): All Redux store reads in this file (state.knowledge.bases, state.llm.providers)
-//           should migrate to the V2 SQLite/Drizzle data layer (src/main/services/agents/).
+//           should migrate to the V2 SQLite/Drizzle data layer.
 //           Redux is blocked for new data-model features until v2.0.0.
-//           See: src/main/services/agents/database/schema/index.ts
 
 import { loggerService } from '@logger'
-import KnowledgeService from '@main/services/KnowledgeService'
+import { knowledgeService } from '@main/services/KnowledgeService'
 import { reduxService } from '@main/services/ReduxService'
 import type { KnowledgeBase, KnowledgeBaseParams, Provider } from '@types'
 import type { Response } from 'express'
 import type * as z from 'zod'
 
-import type { ValidationRequest } from '../agents/validators/zodValidator'
 import type { KnowledgeSearchSchema } from './validators/zodSchemas'
+import type { ValidationRequest } from './validators/zodValidator'
 
 const logger = loggerService.withContext('KnowledgeHandlers')
 
@@ -142,8 +141,12 @@ async function getProviderConfig(providerId: string): Promise<{ apiKey: string; 
   baseURL = baseURL.replace(/\/+$/, '')
   baseURL = baseURL.replace(/#$/, '')
 
+  // If multiple API keys are configured (comma-separated), use the first one.
+  // Matches the main-process convention in OpenClawService.
+  const apiKey = provider.apiKey ? provider.apiKey.split(',')[0].trim() : ''
+
   return {
-    apiKey: provider.apiKey || '',
+    apiKey,
     baseURL
   }
 }
@@ -243,10 +246,10 @@ export const searchKnowledge = async (req: ValidationRequest, res: Response): Pr
       try {
         const params = await getKnowledgeBaseParams(base)
 
-        // WORKAROUND: KnowledgeService.search() expects Electron.IpcMainInvokeEvent for IPC signature.
+        // WORKAROUND: knowledgeService.search() expects Electron.IpcMainInvokeEvent for IPC signature.
         // The @TraceMethod decorator doesn't currently access event properties, so passing {} is safe.
-        // TODO(v2): Add searchInternal() method to KnowledgeService for non-IPC calls.
-        const searchResults = await KnowledgeService.search({} as Electron.IpcMainInvokeEvent, {
+        // TODO(v2): Add searchInternal() method to knowledgeService for non-IPC calls.
+        const searchResults = await knowledgeService.search({} as Electron.IpcMainInvokeEvent, {
           search: query,
           base: params
         })
