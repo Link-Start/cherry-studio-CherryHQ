@@ -785,7 +785,7 @@
       "server_not_running_description": "O servidor da API precisa estar em execução para que os agentes funcionem. Você pode iniciá-lo diretamente ou verificar as configurações."
     }
   },
-  "apiServer": {
+  "apiGateway": {
     "actions": {
       "copy": "Copiar",
       "regenerate": "Regenerar",
@@ -7074,23 +7074,6 @@
     "settings": "Configurações",
     "store": "Biblioteca de assistentes",
     "translate": "Traduzir"
-  },
-  "trace": {
-    "backList": "Voltar à lista",
-    "edasSupport": "Desenvolvido pela Alibaba Cloud EDAS",
-    "endTime": "Hora de término",
-    "inputs": "Entradas",
-    "label": "Cadeia de chamadas",
-    "name": "Nome do nó",
-    "noTraceList": "Nenhuma informação de rastreamento encontrada",
-    "outputs": "Saídas",
-    "parentId": "ID superior",
-    "spanDetail": "Detalhes do Span",
-    "spendTime": "Tempo gasto",
-    "startTime": "Hora de início",
-    "tag": "Etiqueta",
-    "tokenUsage": "Uso de Token",
-    "traceWindow": "Janela de rastreamento"
   },
   "translate": {
     "alter_language": "Idioma alternativo",

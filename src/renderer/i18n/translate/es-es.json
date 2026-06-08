@@ -785,7 +785,7 @@
       "server_not_running_description": "El servidor de la API debe estar en ejecución para que los agentes funcionen. Puede iniciarlo directamente o comprobar los ajustes."
     }
   },
-  "apiServer": {
+  "apiGateway": {
     "actions": {
       "copy": "Copiar",
       "regenerate": "Regenerar",
@@ -3991,9 +3991,9 @@
       "auto": "Auto",
       "cartoon_3d": "Caricatura 3D",
       "chinese_painting": "Pintura China",
-      "flat_illustration": "[to be translated]:Flat Illustration",
-      "natural": "[to be translated]:Natural",
-      "oil_painting": "[to be translated]:Oil Painting",
+      "flat_illustration": "Ilustración plana",
+      "natural": "Natural",
+      "oil_painting": "Pintura al óleo",
       "photography": "Fotografía",
       "portrait": "Retrato",
       "sketch": "Boceto",
@@ -7074,23 +7074,6 @@
     "settings": "Configuración",
     "store": "Biblioteca de asistentes",
     "translate": "Traducir"
-  },
-  "trace": {
-    "backList": "Volver a la lista",
-    "edasSupport": "Funciona con Alibaba Cloud EDAS",
-    "endTime": "Hora de finalización",
-    "inputs": "Entradas",
-    "label": "Cadena de llamadas",
-    "name": "Nombre del nodo",
-    "noTraceList": "No se encontró información de traza",
-    "outputs": "Salidas",
-    "parentId": "ID superior",
-    "spanDetail": "Detalles del span",
-    "spendTime": "Tiempo consumido",
-    "startTime": "Hora de inicio",
-    "tag": "Etiqueta",
-    "tokenUsage": "Uso de tokens",
-    "traceWindow": "Ventana de cadena de llamadas"
   },
   "translate": {
     "alter_language": "Idioma alternativo",

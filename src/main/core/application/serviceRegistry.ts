@@ -17,12 +17,13 @@ import { AiStreamManager } from '@main/ai/streamManager/AiStreamManager'
 import { JobManager } from '@main/core/job/JobManager'
 import { SchedulerService } from '@main/core/scheduler/SchedulerService'
 import { WindowManager } from '@main/core/window/WindowManager'
+import { ApiGatewayService } from '@main/features/apiGateway/ApiGatewayService'
 import { AnalyticsService } from '@main/services/AnalyticsService'
-import { ApiServerService } from '@main/services/ApiServerService'
 import { AppMenuService } from '@main/services/AppMenuService'
 import { AppUpdaterService } from '@main/services/AppUpdaterService'
 import { CherryInOauthService } from '@main/services/CherryInOauthService'
 import { CodeCliService } from '@main/services/CodeCliService'
+import { CommandService } from '@main/services/CommandService'
 import { FileManager } from '@main/services/file/FileManager'
 import { DirectoryTreeManager } from '@main/services/file/tree/DirectoryTreeManager'
 import { FileProcessingOrchestrationService, TesseractRuntimeService } from '@main/services/fileProcessing'
@@ -42,6 +43,7 @@ import { SearchService } from '@main/services/SearchService'
 import { SelectionService } from '@main/services/selection/SelectionService'
 import { SettingsWindowService } from '@main/services/SettingsWindowService'
 import { ShortcutService } from '@main/services/ShortcutService'
+import { StorageMonitorService } from '@main/services/StorageMonitorService'
 import { SubWindowService } from '@main/services/SubWindowService'
 import { ThemeService } from '@main/services/ThemeService'
 import { TrayService } from '@main/services/TrayService'
@@ -84,6 +86,7 @@ export const services = {
   AnalyticsService,
   AppMenuService,
   CodeCliService,
+  CommandService,
   LanTransferService,
   FileManager,
   DirectoryTreeManager,
@@ -100,6 +103,7 @@ export const services = {
   OvmsManager,
   ProtocolService,
   ProxyManager,
+  StorageMonitorService,
   PythonService,
   TrayService,
   WebSearchService,
@@ -120,7 +124,7 @@ export const services = {
   AiStreamManager,
   KnowledgeOrchestrationService,
   KnowledgeVectorStoreService,
-  ApiServerService,
+  ApiGatewayService,
   AppUpdaterService,
   SchedulerService,
   JobManager

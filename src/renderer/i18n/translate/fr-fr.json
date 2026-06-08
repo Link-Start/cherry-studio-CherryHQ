@@ -785,7 +785,7 @@
       "server_not_running_description": "Le serveur API doit être en cours d'exécution pour que les agents fonctionnent. Vous pouvez le démarrer directement ou vérifier les paramètres."
     }
   },
-  "apiServer": {
+  "apiGateway": {
     "actions": {
       "copy": "Copier",
       "regenerate": "Régénérer",
@@ -2363,10 +2363,10 @@
       "history_title": "Historique de recherche",
       "placeholder": "Entrez la requête de test...",
       "ranking_only": "Résultats ordonnés",
-      "result_count": "[to be translated]:{{count}} results",
-      "result_rank": "[to be translated]:Rank #{{rank}}",
-      "result_relevance": "[to be translated]:Relevance {{score}}",
-      "search_failed": "[to be translated]:Failed to run recall test",
+      "result_count": "{{count}} résultats",
+      "result_rank": "Rang n°{{rank}}",
+      "result_relevance": "Pertinence {{score}}",
+      "search_failed": "Échec de l'exécution du test de rappel",
       "searching": "Recherche...",
       "submit": "Rechercher",
       "top_score": "Haut : {{score}}"
@@ -7074,23 +7074,6 @@
     "settings": "Paramètres",
     "store": "Bibliothèque d'assistants",
     "translate": "Traduire"
-  },
-  "trace": {
-    "backList": "Retour à la liste",
-    "edasSupport": "Propulsé par Alibaba Cloud EDAS",
-    "endTime": "Heure de fin",
-    "inputs": "Entrées",
-    "label": "Chaîne d'appel",
-    "name": "Nom du nœud",
-    "noTraceList": "Aucune information de trace trouvée",
-    "outputs": "Sorties",
-    "parentId": "ID parent",
-    "spanDetail": "Détails du span",
-    "spendTime": "Temps consommé",
-    "startTime": "Heure de début",
-    "tag": "Étiquette",
-    "tokenUsage": "Utilisation des tokens",
-    "traceWindow": "Fenêtre de chaîne d'appel"
   },
   "translate": {
     "alter_language": "Langue de secours",

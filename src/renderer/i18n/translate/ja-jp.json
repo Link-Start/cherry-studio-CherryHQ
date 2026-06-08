@@ -785,7 +785,7 @@
       "server_not_running_description": "エージェントを動作させるには、APIサーバーが稼働している必要があります。直接起動するか、設定を確認してください。"
     }
   },
-  "apiServer": {
+  "apiGateway": {
     "actions": {
       "copy": "コピー",
       "regenerate": "再生成",
@@ -7074,23 +7074,6 @@
     "settings": "設定",
     "store": "アシスタントライブラリ",
     "translate": "翻訳"
-  },
-  "trace": {
-    "backList": "リストに戻る",
-    "edasSupport": "Powered by Alibaba Cloud EDAS",
-    "endTime": "終了時間",
-    "inputs": "入力",
-    "label": "呼び出しチェーン",
-    "name": "ノード名",
-    "noTraceList": "トレース情報が見つかりません",
-    "outputs": "出力",
-    "parentId": "親ID",
-    "spanDetail": "スパンの詳細",
-    "spendTime": "時間を過ごす",
-    "startTime": "開始時間",
-    "tag": "Tagラベル",
-    "tokenUsage": "トークンの使用",
-    "traceWindow": "呼び出しチェーンウィンドウ"
   },
   "translate": {
     "alter_language": "備用言語",

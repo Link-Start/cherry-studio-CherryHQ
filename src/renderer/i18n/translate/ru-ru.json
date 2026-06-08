@@ -785,7 +785,7 @@
       "server_not_running_description": "Для работы агентов необходимо, чтобы API-сервер был запущен. Вы можете запустить его напрямую или проверить настройки."
     }
   },
-  "apiServer": {
+  "apiGateway": {
     "actions": {
       "copy": "Копировать",
       "regenerate": "Перегенерировать",
@@ -2825,8 +2825,8 @@
       "title": "Настройка серверной части в процессе"
     },
     "sidebar": {
-      "all_resources": "[to be translated]:All resources",
-      "all_tags": "[to be translated]:All tags",
+      "all_resources": "Все ресурсы",
+      "all_tags": "Все теги",
       "no_tags": "Пока нет меток",
       "subtitle": "Управляйте своими ресурсами ИИ",
       "tags": "Теги",
@@ -7074,23 +7074,6 @@
     "settings": "Настройки",
     "store": "Библиотека помощников",
     "translate": "Перевод"
-  },
-  "trace": {
-    "backList": "Вернуться к списку",
-    "edasSupport": "Powered by Alibaba Cloud EDAS",
-    "endTime": "время окончания",
-    "inputs": "входы",
-    "label": "Цепочка вызовов",
-    "name": "Имя узла",
-    "noTraceList": "Информация о следах не найдена",
-    "outputs": "выходы",
-    "parentId": "Родительский идентификатор",
-    "spanDetail": "Span Подробнее",
-    "spendTime": "тратитьВремя",
-    "startTime": "время начала",
-    "tag": "ярлык",
-    "tokenUsage": "Использование токена",
-    "traceWindow": "Окно цепочки вызовов"
   },
   "translate": {
     "alter_language": "Альтернативный язык",

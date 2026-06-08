@@ -785,7 +785,7 @@
       "server_not_running_description": "Der API-Server muss laufen, damit die Agents funktionieren. Sie können ihn direkt starten oder die Einstellungen überprüfen."
     }
   },
-  "apiServer": {
+  "apiGateway": {
     "actions": {
       "copy": "Kopieren",
       "regenerate": "Neu generieren",
@@ -7074,23 +7074,6 @@
     "settings": "Einstellungen",
     "store": "Assistenten-Bibliothek",
     "translate": "Übersetzen"
-  },
-  "trace": {
-    "backList": "Rückgängig-Liste",
-    "edasSupport": "Powered by Alibaba Cloud EDAS",
-    "endTime": "Endzeit",
-    "inputs": "Eingabe",
-    "label": "Aufrufkette",
-    "name": "Knotenname",
-    "noTraceList": "Trace-Informationen nicht gefunden",
-    "outputs": "Ausgabe",
-    "parentId": "Übergeordnete ID",
-    "spanDetail": "Span-Details",
-    "spendTime": "Verbrauchte Zeit",
-    "startTime": "Startzeit",
-    "tag": "Tags",
-    "tokenUsage": "Token-Verwendung",
-    "traceWindow": "Aufrufkette-Fenster"
   },
   "translate": {
     "alter_language": "Alternative Sprache",
