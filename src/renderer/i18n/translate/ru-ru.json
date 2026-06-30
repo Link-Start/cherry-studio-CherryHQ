@@ -935,6 +935,10 @@
           "description": "Выполняет shell-команды в вашей среде",
           "label": "Баш"
         },
+        "CherryKbManage": {
+          "description": "[to be translated]:Adds, deletes, or refreshes documents in your knowledge bases",
+          "label": "[to be translated]:Manage Knowledge"
+        },
         "CherryKbSearch": {
           "description": "Ищет в ваших базах знаний",
           "label": "Поиск знаний"
@@ -1593,6 +1597,10 @@
       }
     },
     "message": {
+      "cache_stats": {
+        "inline": "Cache {{hit_rate}}%",
+        "tooltip": "Cache read {{cache_read}} / write {{cache_write}} / no cache {{no_cache}} · saved {{saved}} input tokens"
+      },
       "editing_current": "Это сообщение редактируется в композере",
       "flow": {
         "branches": "ветви",
@@ -3162,12 +3170,22 @@
           "agent_title": "Новый агент",
           "assistant_title": "Новый ассистент",
           "avatar_aria": "Выберите аватар",
+          "back": "[to be translated]:Back",
+          "capability": {
+            "import": "[to be translated]:Import skill",
+            "no_skills": "[to be translated]:No skills installed",
+            "search": "[to be translated]:Search skills"
+          },
           "description_placeholder": "Опиши, для чего это нужно...",
-          "dialog_description": "Создайте лёгкого ассистента или агента.",
-          "model_placeholder": "Выберите модель",
-          "model_required": "Пожалуйста, выберите модель",
+          "guided_progress": "[to be translated]:Guided setup · Step {{current}} of {{total}}",
           "name_placeholder": "Введите имя",
-          "name_required": "Пожалуйста, введите имя",
+          "next": "[to be translated]:Next",
+          "step": {
+            "basic": "[to be translated]:Basic info",
+            "capability": "[to be translated]:Skills",
+            "knowledge": "[to be translated]:Knowledge",
+            "persona": "[to be translated]:Persona"
+          },
           "submit": "Создать",
           "submit_failed": "Создание не удалось"
         },

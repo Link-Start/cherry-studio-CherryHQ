@@ -935,6 +935,10 @@
           "description": "環境でシェルコマンドを実行します",
           "label": "Bash"
         },
+        "CherryKbManage": {
+          "description": "[to be translated]:Adds, deletes, or refreshes documents in your knowledge bases",
+          "label": "[to be translated]:Manage Knowledge"
+        },
         "CherryKbSearch": {
           "description": "ナレッジベースを検索します",
           "label": "ナレッジ検索"
@@ -1593,6 +1597,10 @@
       }
     },
     "message": {
+      "cache_stats": {
+        "inline": "Cache {{hit_rate}}%",
+        "tooltip": "Cache read {{cache_read}} / write {{cache_write}} / no cache {{no_cache}} · saved {{saved}} input tokens"
+      },
       "editing_current": "このメッセージはコンポーザーで編集中です",
       "flow": {
         "branches": "枝",
@@ -3162,12 +3170,22 @@
           "agent_title": "新エージェント",
           "assistant_title": "新しいアシスタント",
           "avatar_aria": "アバターを選択",
+          "back": "[to be translated]:Back",
+          "capability": {
+            "import": "[to be translated]:Import skill",
+            "no_skills": "[to be translated]:No skills installed",
+            "search": "[to be translated]:Search skills"
+          },
           "description_placeholder": "それが何のためにあるのかを説明してください…",
-          "dialog_description": "軽量なアシスタントまたはエージェントを作成する",
-          "model_placeholder": "モデルを選択してください",
-          "model_required": "モデルを選択してください",
+          "guided_progress": "[to be translated]:Guided setup · Step {{current}} of {{total}}",
           "name_placeholder": "名前を入力してください",
-          "name_required": "名前を入力してください",
+          "next": "[to be translated]:Next",
+          "step": {
+            "basic": "[to be translated]:Basic info",
+            "capability": "[to be translated]:Skills",
+            "knowledge": "[to be translated]:Knowledge",
+            "persona": "[to be translated]:Persona"
+          },
           "submit": "作成",
           "submit_failed": "作成に失敗しました"
         },

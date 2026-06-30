@@ -935,6 +935,10 @@
           "description": "Executa comandos shell no seu ambiente",
           "label": "Bash"
         },
+        "CherryKbManage": {
+          "description": "[to be translated]:Adds, deletes, or refreshes documents in your knowledge bases",
+          "label": "[to be translated]:Manage Knowledge"
+        },
         "CherryKbSearch": {
           "description": "Pesquisa suas bases de conhecimento",
           "label": "Pesquisa de Conhecimento"
@@ -1593,6 +1597,10 @@
       }
     },
     "message": {
+      "cache_stats": {
+        "inline": "Cache {{hit_rate}}%",
+        "tooltip": "Cache read {{cache_read}} / write {{cache_write}} / no cache {{no_cache}} · saved {{saved}} input tokens"
+      },
       "editing_current": "Esta mensagem está sendo editada no compositor",
       "flow": {
         "branches": "ramos",
@@ -3162,12 +3170,22 @@
           "agent_title": "Novo Agente",
           "assistant_title": "Novo Assistente",
           "avatar_aria": "Escolher avatar",
+          "back": "[to be translated]:Back",
+          "capability": {
+            "import": "[to be translated]:Import skill",
+            "no_skills": "[to be translated]:No skills installed",
+            "search": "[to be translated]:Search skills"
+          },
           "description_placeholder": "Descreva para que serve...",
-          "dialog_description": "Crie um assistente ou agente leve.",
-          "model_placeholder": "Selecione um modelo",
-          "model_required": "Por favor, selecione um modelo",
+          "guided_progress": "[to be translated]:Guided setup · Step {{current}} of {{total}}",
           "name_placeholder": "Insira um nome",
-          "name_required": "Por favor, insira um nome",
+          "next": "[to be translated]:Next",
+          "step": {
+            "basic": "[to be translated]:Basic info",
+            "capability": "[to be translated]:Skills",
+            "knowledge": "[to be translated]:Knowledge",
+            "persona": "[to be translated]:Persona"
+          },
           "submit": "Criar",
           "submit_failed": "Falha na criação"
         },
