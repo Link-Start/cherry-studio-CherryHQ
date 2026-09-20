@@ -72,4 +72,34 @@ describe('MessageImageUrlsProvider', () => {
     await act(async () => resolveFirst({ first: '/current/first.png' }))
     expect(screen.getByTestId('urls')).toHaveTextContent('["file:///current/second.png"]')
   })
+
+  it('resolves managed images without a provider ancestor', async () => {
+    ipcRequest.mockResolvedValue({ 'entry-photo': '/current/photo.png' })
+    const parts = [managedImage('entry-photo', 'file:///old/photo.png')]
+
+    render(<Probe parts={parts} />)
+
+    await waitFor(() => expect(screen.getByTestId('urls')).toHaveTextContent('["file:///current/photo.png"]'))
+    expect(ipcRequest).toHaveBeenCalledWith('file.batch_get_physical_paths', { ids: ['entry-photo'] })
+  })
+
+  it('shares one lookup across concurrent mounts for the same entries', async () => {
+    let resolvePaths!: (paths: Record<string, string>) => void
+    ipcRequest.mockReturnValueOnce(new Promise((resolve) => (resolvePaths = resolve)))
+    const parts = [managedImage('entry-photo', 'file:///old/photo.png')]
+
+    render(
+      <>
+        <Harness parts={parts} />
+        <Harness parts={parts} />
+      </>
+    )
+
+    expect(ipcRequest).toHaveBeenCalledTimes(1)
+    await act(async () => resolvePaths({ 'entry-photo': '/current/photo.png' }))
+    expect(screen.getAllByTestId('urls')).toHaveLength(2)
+    for (const node of screen.getAllByTestId('urls')) {
+      expect(node).toHaveTextContent('["file:///current/photo.png"]')
+    }
+  })
 })
