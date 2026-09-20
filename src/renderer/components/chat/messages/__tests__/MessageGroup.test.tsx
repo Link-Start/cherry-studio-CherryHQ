@@ -61,7 +61,8 @@ const mocks = vi.hoisted(() => ({
   messageListActions: vi.fn(),
   messageListSelection: vi.fn(),
   messageListEditingId: vi.fn(),
-  messageListUiSelectors: vi.fn()
+  messageListUiSelectors: vi.fn(),
+  ipcRequest: vi.fn()
 }))
 
 vi.mock('@logger', () => ({
@@ -89,6 +90,8 @@ vi.mock('@data/hooks/usePreference', () => ({
 vi.mock('@renderer/components/HorizontalScrollContainer', () => ({
   default: mocks.HorizontalScrollContainer
 }))
+
+vi.mock('@renderer/ipc', () => ({ ipcApi: { request: mocks.ipcRequest } }))
 
 vi.mock('@renderer/utils/style', () => {
   const flattenClassNames = (value: unknown): string[] => {
@@ -303,6 +306,8 @@ const expectEveryMessageHeaderToShowModelIdentity = (expected: boolean) => {
 describe('MessageGroup', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mocks.ipcRequest.mockReset()
+    mocks.ipcRequest.mockResolvedValue({})
     mocks.settings.mockReturnValue({
       multiModelMessageStyle: 'horizontal',
       gridColumns: 2,
@@ -674,6 +679,44 @@ describe('MessageGroup', () => {
       'data-handle',
       JSON.stringify({ kind: 'path', path: '/tmp/Application Support/report.pdf' })
     )
+  })
+
+  it('resolves a hoisted managed image through its current file entry path', async () => {
+    mocks.settings.mockReturnValue({
+      multiModelMessageStyle: 'fold',
+      gridColumns: 2,
+      gridPopoverTrigger: 'click',
+      messageFont: 'system',
+      fontSize: 14,
+      messageStyle: 'bubble',
+      showMessageOutline: false
+    })
+    mocks.ipcRequest.mockResolvedValue({ 'entry-photo': '/current/Data/Files/entry-photo.png' })
+    const messages = [{ ...createMessage('msg-1', 0, 'vertical'), role: 'user' as const }]
+
+    const { container } = render(
+      <MessageGroup
+        messages={messages}
+        partsByMessageId={{
+          'msg-1': [
+            {
+              type: 'file',
+              url: 'file:///previous-machine/Data/Files/entry-photo.png',
+              mediaType: 'image/png',
+              filename: 'photo.png',
+              providerMetadata: { cherry: { fileEntryId: 'entry-photo' } }
+            }
+          ] as CherryMessagePart[]
+        }}
+      />
+    )
+
+    const imageBlock = await screen.findByTestId('hoisted-image-block')
+    await waitFor(() =>
+      expect(imageBlock).toHaveAttribute('data-images', '["file:///current/Data/Files/entry-photo.png"]')
+    )
+    expect(mocks.ipcRequest).toHaveBeenCalledWith('file.batch_get_physical_paths', { ids: ['entry-photo'] })
+    expect(container.querySelector('#message-msg-1 .message-content-container')?.contains(imageBlock)).toBe(false)
   })
 
   it('renders adapter-owned tail content only after its target assistant message', () => {
